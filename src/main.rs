@@ -5,9 +5,9 @@ use std::path::PathBuf;
 use dvorakjp_romantable::build_roman_table_with_emoji::RomanTableWithEmojiBuilder;
 use dvorakjp_romantable::detect_duplicates::DuplicateDetector;
 
-const DEFAULT_EMOJI_FILE: &str = "./lib/emoji.txt";
-const DEFAULT_INPUT_FILE: &str = "./dvorakjp_prime.txt";
-const DEFAULT_OUTPUT_FILE: &str = "./dvorakjp_prime_with_emoji.txt";
+const DEFAULT_EMOJI_FILE: &str = "./data/emoji.txt";
+const DEFAULT_INPUT_FILE: &str = "./google_japanese_input/dvorakjp_prime.txt";
+const DEFAULT_OUTPUT_FILE: &str = "./google_japanese_input/dvorakjp_prime_with_emoji.txt";
 
 #[derive(Parser)]
 #[clap(name = "cargo")]
