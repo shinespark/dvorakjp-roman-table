@@ -20,20 +20,20 @@ enum Cargo {
 #[derive(clap::Args)]
 #[clap(author, version, about, long_about = None)]
 struct BuildRomanTableWithEmoji {
-    #[clap(long, parse(from_os_str))]
+    #[clap(long)]
     input_file: Option<PathBuf>,
 
-    #[clap(long, parse(from_os_str))]
+    #[clap(long)]
     emoji_file: Option<PathBuf>,
 
-    #[clap(long, parse(from_os_str))]
+    #[clap(long)]
     output_file: Option<PathBuf>,
 }
 
 #[derive(clap::Args)]
 #[clap(author, version, about, long_about = None)]
 struct DetectDuplicates {
-    #[clap(long, parse(from_os_str))]
+    #[clap(long)]
     detect_file: PathBuf,
 }
 
