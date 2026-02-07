@@ -13,12 +13,23 @@ const DEFAULT_OUTPUT_FILE: &str = "./google_japanese_input/dvorakjp_prime_with_e
 #[clap(name = "cargo")]
 #[clap(bin_name = "cargo")]
 enum Cargo {
-    BuildRomanTableWithEmoji(BuildRomanTableWithEmoji),
-    DetectDuplicates(DetectDuplicates),
+    Build(Build),
+    Detect(Detect),
 }
 
 #[derive(clap::Args)]
-#[clap(author, version, about, long_about = None)]
+#[clap(about = "ローマ字テーブルのビルド")]
+struct Build {
+    #[clap(subcommand)]
+    command: BuildCommand,
+}
+
+#[derive(clap::Subcommand)]
+enum BuildCommand {
+    RomanTableWithEmoji(BuildRomanTableWithEmoji),
+}
+
+#[derive(clap::Args)]
 struct BuildRomanTableWithEmoji {
     #[clap(long)]
     input_file: Option<PathBuf>,
@@ -31,7 +42,18 @@ struct BuildRomanTableWithEmoji {
 }
 
 #[derive(clap::Args)]
-#[clap(author, version, about, long_about = None)]
+#[clap(about = "ローマ字テーブルの検証")]
+struct Detect {
+    #[clap(subcommand)]
+    command: DetectCommand,
+}
+
+#[derive(clap::Subcommand)]
+enum DetectCommand {
+    Duplicates(DetectDuplicates),
+}
+
+#[derive(clap::Args)]
 struct DetectDuplicates {
     #[clap(long)]
     detect_file: PathBuf,
@@ -40,18 +62,22 @@ struct DetectDuplicates {
 #[tokio::main]
 async fn main() -> Result<()> {
     let _ = match Cargo::parse() {
-        Cargo::BuildRomanTableWithEmoji(args) => {
-            RomanTableWithEmojiBuilder::exec(
-                args.input_file
-                    .unwrap_or_else(|| PathBuf::from(DEFAULT_INPUT_FILE)),
-                args.emoji_file
-                    .unwrap_or_else(|| PathBuf::from(DEFAULT_EMOJI_FILE)),
-                args.output_file
-                    .unwrap_or_else(|| PathBuf::from(DEFAULT_OUTPUT_FILE)),
-            )
-            .await
-        }
-        Cargo::DetectDuplicates(args) => DuplicateDetector::exec(args.detect_file),
+        Cargo::Build(build) => match build.command {
+            BuildCommand::RomanTableWithEmoji(args) => {
+                RomanTableWithEmojiBuilder::exec(
+                    args.input_file
+                        .unwrap_or_else(|| PathBuf::from(DEFAULT_INPUT_FILE)),
+                    args.emoji_file
+                        .unwrap_or_else(|| PathBuf::from(DEFAULT_EMOJI_FILE)),
+                    args.output_file
+                        .unwrap_or_else(|| PathBuf::from(DEFAULT_OUTPUT_FILE)),
+                )
+                .await
+            }
+        },
+        Cargo::Detect(detect) => match detect.command {
+            DetectCommand::Duplicates(args) => DuplicateDetector::exec(args.detect_file),
+        },
     };
     Ok(())
 }
