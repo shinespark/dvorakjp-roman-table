@@ -2,9 +2,12 @@ use anyhow::Result;
 use clap::Parser;
 use std::path::PathBuf;
 
+use dvorakjp_romantable::build_roman_table::RomanTableBuilder;
 use dvorakjp_romantable::build_roman_table_with_emoji::RomanTableWithEmojiBuilder;
 use dvorakjp_romantable::detect_duplicates::DuplicateDetector;
 
+const DEFAULT_ROMAN_TABLE_INPUT_DIR: &str = "./data/roman_table";
+const DEFAULT_ROMAN_TABLE_OUTPUT_FILE: &str = "./outputs/dvorakjp.tsv";
 const DEFAULT_EMOJI_FILE: &str = "./data/emoji.txt";
 const DEFAULT_INPUT_FILE: &str = "./google_japanese_input/dvorakjp_prime.txt";
 const DEFAULT_OUTPUT_FILE: &str = "./google_japanese_input/dvorakjp_prime_with_emoji.txt";
@@ -26,7 +29,17 @@ struct Build {
 
 #[derive(clap::Subcommand)]
 enum BuildCommand {
+    RomanTable(BuildRomanTable),
     RomanTableWithEmoji(BuildRomanTableWithEmoji),
+}
+
+#[derive(clap::Args)]
+struct BuildRomanTable {
+    #[clap(long)]
+    input_dir: Option<PathBuf>,
+
+    #[clap(long)]
+    output_file: Option<PathBuf>,
 }
 
 #[derive(clap::Args)]
@@ -63,6 +76,12 @@ struct DetectDuplicates {
 async fn main() -> Result<()> {
     let _ = match Cargo::parse() {
         Cargo::Build(build) => match build.command {
+            BuildCommand::RomanTable(args) => RomanTableBuilder::exec(
+                args.input_dir
+                    .unwrap_or_else(|| PathBuf::from(DEFAULT_ROMAN_TABLE_INPUT_DIR)),
+                args.output_file
+                    .unwrap_or_else(|| PathBuf::from(DEFAULT_ROMAN_TABLE_OUTPUT_FILE)),
+            ),
             BuildCommand::RomanTableWithEmoji(args) => {
                 RomanTableWithEmojiBuilder::exec(
                     args.input_file
