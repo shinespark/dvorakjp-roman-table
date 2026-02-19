@@ -1,4 +1,4 @@
-# dvorakjp-romantable
+# dvorakjp-roman-table
 
 Google 日本語入力のデフォルトローマ字テーブルをベースに、[DvorakJP](http://www7.plala.or.jp/dvorakjp/) のマッピングを行ったローマ字テーブルです。
 
@@ -6,9 +6,9 @@ DvorakJP のローマ字テーブルとしてご利用ください。
 
 ## Usage
 
-1. [dvorakjp_prime.txt](dvorakjp_prime.txt) をローカルにダウンロードします。
+1. [dvorak_jp.tsv](outputs/dvorak_jp.tsv) をローカルにダウンロードします。
 1. Google 日本語入力の `Preferences > General > Romaji table > Customize...` ボタンをクリックします。
-1. `Edit` ボタンから `Import from file...` を クリックし、`dvorakjp_prime.txt` を選択し、`OK` をクリックします。
+1. `Edit` ボタンから `Import from file...` を クリックし、`dvorak_jp.tsv` を選択し、`OK` をクリックします。
 
 通常は上記手順で適用されます。
 
@@ -20,33 +20,32 @@ DvorakJP のローマ字テーブルとしてご利用ください。
 
 一般的なローマ字テーブルに、以下の変更が加えてありました(2015-10-11 現在)。
 
-1. `z*` キーによる矢印記号サポート
-   - `zh`: `←`, `zj`: `↓` などの入力をサポート
-1. 訓令式以外のローマ字サポート
+1. `z[hijk]` による矢印記号のサポート
+   - `zh`: `←`, `zi`: `→` などの入力をサポート
+1. 訓令式以外のローマ字入力のサポート
    - `f*`, `ch*`, `ts*` など、一般的なローマ字テーブルにも存在するヘボン式ローマ字入力
    - `twa`: `とぁ` などの `w` 拗音の追加
 1. `t'u`: `とぅ` などの `'` を利用した拗音サポート
-   - ただし、`twu`: `とぅ` などの既存の入力でも代替可能
 
 ### DvorakJP - v1.0 正式版 のローマ字テーブルの仕様
 
-[DvorakJP - 日本語入力用拡張 Dvorak](http://www7.plala.or.jp/dvorakjp/dvorakjp.htm) にて公開されているローマ字テーブルです。
-左手ホームポジションに母音がすべて揃っている Dvorak 配列に、より日本語入力でも打鍵しやすいよう以下の拡張が行われています。
+[DvorakJP - 日本語入力用拡張 Dvorak](http://www7.plala.or.jp/dvorakjp/dvorakjp.htm) にて公開されていた、Dvorak 配列をベースに拡張されたローマ字テーブルです。
+Dvorak 配列では、左手ホームポジションに母音がすべて揃っており、右手に子音が配置されているレイアウトのため、交互にタイプしやすい構成になっています。
+DvorakJP 配列では、より日本語入力でもタイプしやすいよう以下の拡張が行われています。
 
-1. か行を右手側の `c*` でも入力可能
-   - 多く打鍵する子音をほぼ右手のみで入力可能に
-1. 拗音入力時に利用する `y` キーの代わりに、`h`, または`n`キーが入力可能
-   - 多く打鍵する子音をほぼ右手のみで入力可能に
+1. か行を右手側の `c*` でも入力可能に
+   - 頻繁にタイプするか行を、右手側のキーでも入力可能にすることで、より交互にタイプしやすい構成に
+1. 拗音入力時、 `y` キーの代わりに、`h`, または`n`キーが入力可能に
+   - 頻繁にタイプする `y` を、右手側のキーでも入力可能にすることで、より交互にタイプしやすい構成に
 1. 二重母音拡張と撥音拡張を追加
    - 連続する母音入力(左手での連続打鍵回数)を低減
 
-### [DvorakJP Prime](dvorakjp_prime.txt) の仕様
+### 本リポジトリのローマ字テーブルの仕様
 
-このリポジトリで公開しているメインのローマ字テーブルです。
-Google 日本語入力のローマ字テーブルに DvorakJP をマージするに辺り、以下の変更を行っています。
+Google 日本語入力のローマ字テーブルをベースに、DvorakJP をマージするに辺り、以下の変更を行っています。
 
 1. Google 日本語入力の `z*` キーによる記号の入力を、 `;*` に変更
-   - ざ行の入力と競合する為、Qwerty 時の `z` キーに位置する`;`に置換
+   - ざ行の入力と競合する為、Qwerty 配列の `z` キーに位置する`;`に置換
 1. Google 日本語入力の `t'u`: `とぅ` などの `'` を利用した拗音入力の削除
    - `twu`: `とぅ` などで代替可能かつ、DvorakJP の二重母音拡張と重複する為
 1. Google 日本語入力の `ch*`, `tw*` などの拗音にも DvorakJP の二重母音拡張を追加
@@ -56,21 +55,21 @@ Google 日本語入力のローマ字テーブルに DvorakJP をマージする
 1. DvorakJP の `k` によるか行の二重母音拡張と拗音拡張の有効可
    - [DvorakJP](http://www7.plala.or.jp/dvorakjp/) ではか行の入力は `c` だけに限定されていましたが、 `k` もサポートし、コンビネーションキーを利用した二重母音拡張と拗音拡張が利用可能
 1. DvorakJP 0.2β 時の `p` キーに二重母音拡張 `uu` を復活
-   - Google 日本語入力では連続同文字打鍵での「っ」が入れられない問題は発生しない
+   - Google 日本語入力では連続同文字打鍵での「っ」が入れられない問題は発生しないため
    - 参照: [DvorakJP - 前バージョンからの改定について](http://www7.plala.or.jp/dvorakjp/kaitei.htm)
 
-### [DvorakJP Prime with Emoji](dvorakjp_prime_with_emoji.txt) の仕様
+### [DvorakJP with Emoji](outputs/dvorak_jp_with_emoji.txt) の仕様
 
-DvorakJP Prime に、絵文字変換を追加したローマ字テーブルです。
+DvorakJP に、絵文字変換を追加したローマ字テーブルです。
 全角で `：ｔａｄａ` と入力を試みると、 `🎉` に変換されます。
 
 通常は後ろの `:` 無しでも入力可能ですが、別の emoji 名の入力途中とも判断できる emoji の入力には後ろの `:` が必要です。
 
-```
-:baseball	⚾	         # baseball に続く他のemojiが存在しない為、: 無しで確定される
-:basketball:	🏀	     # basketball に続く他のemojiがある為、確定の為には : が必要
-:basketball_player	⛹
-```
+| 入力 | 変換される絵文字 |  |
+| --- | --- | --- |
+| `:tada` | `🎉` | tada に続く他のemojiが存在しない為、: 無しで確定される |
+| `:basket:` | `🧺` | basket に続く他のemojiがある為、確定の為には : が必要 |
+| `:basketball` | `🏀` | basketball に続く他のemojiがない為、: 無しで確定される |
 
 [emojione/emojione](https://github.com/emojione/emojione/) の emoji.json を取り込んで生成しています。
 
@@ -84,4 +83,4 @@ DvorakJP Prime に、絵文字変換を追加したローマ字テーブルで�
 
 ## License
 
-dvorakjp-romantable is released under the MIT License.
+dvorakjp-roman-table is released under the MIT License.
