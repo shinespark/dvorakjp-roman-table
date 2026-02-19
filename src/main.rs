@@ -5,9 +5,9 @@ use std::path::PathBuf;
 use dvorakjp_romantable::build_roman_table_with_emoji::RomanTableWithEmojiBuilder;
 use dvorakjp_romantable::detect_duplicates::DuplicateDetector;
 
-const DEFAULT_EMOJI_FILE: &str = "./lib/emoji.txt";
-const DEFAULT_INPUT_FILE: &str = "./dvorakjp_prime.txt";
-const DEFAULT_OUTPUT_FILE: &str = "./dvorakjp_prime_with_emoji.txt";
+const DEFAULT_EMOJI_FILE: &str = "./data/emoji.txt";
+const DEFAULT_INPUT_FILE: &str = "./google_japanese_input/dvorakjp_prime.txt";
+const DEFAULT_OUTPUT_FILE: &str = "./google_japanese_input/dvorakjp_prime_with_emoji.txt";
 
 #[derive(Parser)]
 #[clap(name = "cargo")]
@@ -20,20 +20,20 @@ enum Cargo {
 #[derive(clap::Args)]
 #[clap(author, version, about, long_about = None)]
 struct BuildRomanTableWithEmoji {
-    #[clap(long, parse(from_os_str))]
+    #[clap(long)]
     input_file: Option<PathBuf>,
 
-    #[clap(long, parse(from_os_str))]
+    #[clap(long)]
     emoji_file: Option<PathBuf>,
 
-    #[clap(long, parse(from_os_str))]
+    #[clap(long)]
     output_file: Option<PathBuf>,
 }
 
 #[derive(clap::Args)]
 #[clap(author, version, about, long_about = None)]
 struct DetectDuplicates {
-    #[clap(long, parse(from_os_str))]
+    #[clap(long)]
     detect_file: PathBuf,
 }
 

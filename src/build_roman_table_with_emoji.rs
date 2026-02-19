@@ -192,7 +192,7 @@ mod tests {
         #[test]
         fn any() {
             let result = RomanTableWithEmojiBuilder::has_starts_with_same_name(
-                ":basketball:",
+                ":basketball",
                 &[":basketball_player:".to_string()],
             );
             assert!(result);
