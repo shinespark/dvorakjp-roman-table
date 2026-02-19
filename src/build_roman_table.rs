@@ -78,7 +78,10 @@ impl RomanTableBuilder {
     fn remove_empty_lines(lines: Vec<String>) -> Vec<String> {
         lines
             .into_iter()
-            .filter(|line| !line.trim().is_empty())
+            .filter(|line| {
+                let trimmed = line.trim();
+                !trimmed.is_empty() && !trimmed.starts_with('#')
+            })
             .collect()
     }
 
