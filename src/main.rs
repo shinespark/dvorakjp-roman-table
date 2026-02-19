@@ -76,7 +76,7 @@ struct DetectDuplicates {
 async fn main() -> Result<()> {
     let _ = match Cargo::parse() {
         Cargo::Build(build) => match build.command {
-            BuildCommand::RomanTable(args) => RomanTableBuilder::exec(
+            BuildCommand::RomanTable(args) => RomanTableBuilder::build(
                 args.input_dir
                     .unwrap_or_else(|| PathBuf::from(DEFAULT_ROMAN_TABLE_INPUT_DIR)),
                 args.output_file
