@@ -5,7 +5,7 @@ version = "1.2.0"
 
 [dependencies]
 anyhow = "1.0"
-clap = { version = "4.5.57", features = ["derive"] }
+clap = { version = "4.5.59", features = ["derive"] }
 reqwest = { version = "0.13", features = ["json"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
