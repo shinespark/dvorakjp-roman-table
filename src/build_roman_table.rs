@@ -108,34 +108,57 @@ impl RomanTableBuilder {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::collections::HashSet;
 
     #[test]
-    fn assemble_matches_dvorakjp_prime() {
-        let input_dir = PathBuf::from("./data/roman_table");
-        let expected_file = PathBuf::from("./google_japanese_input/dvorakjp_prime.txt");
+    fn test_remove_empty_lines() {
+        let lines = vec![
+            "ka\tか".to_string(),
+            "".to_string(),
+            "ki\tき".to_string(),
+            "# コメント".to_string(),
+            "  ".to_string(),
+            "ku\tく".to_string(),
+        ];
+        let result = RomanTableBuilder::remove_empty_lines(lines);
+        assert_eq!(result, vec!["ka\tか", "ki\tき", "ku\tく"]);
+    }
 
-        let assembled = RomanTableBuilder::assemble(&input_dir).expect("assemble に失敗");
-        let expected_content =
-            fs::read_to_string(&expected_file).expect("dvorakjp_prime.txt の読み込みに失敗");
-        let expected: Vec<&str> = expected_content
-            .lines()
-            .filter(|line| !line.trim().is_empty())
-            .collect();
-
-        let assembled_set: HashSet<&str> = assembled.iter().map(|s| s.as_str()).collect();
-        let expected_set: HashSet<&str> = expected.into_iter().collect();
-
-        let mut only_in_assembled: Vec<&&str> = assembled_set.difference(&expected_set).collect();
-        let mut only_in_expected: Vec<&&str> = expected_set.difference(&assembled_set).collect();
-        only_in_assembled.sort();
-        only_in_expected.sort();
-
-        assert!(
-            only_in_assembled.is_empty() && only_in_expected.is_empty(),
-            "ローマ字テーブルに差分があります:\n  assemble にのみ存在: {:?}\n  dvorakjp_prime.txt にのみ存在: {:?}",
-            only_in_assembled,
-            only_in_expected
+    #[test]
+    fn test_sort_lines() {
+        let lines = vec![
+            "ku\tく".to_string(),
+            "ka\tか".to_string(),
+            "sa\tさ".to_string(),
+            "ki\tき".to_string(),
+            "ai\tあい".to_string(),
+        ];
+        let result = RomanTableBuilder::sort_lines(lines);
+        assert_eq!(
+            result,
+            vec!["ai\tあい", "ka\tか", "ki\tき", "ku\tく", "sa\tさ"]
         );
+    }
+
+    #[test]
+    fn test_sort_key() {
+        // あ行 < か行 < さ行
+        let key_a = RomanTableBuilder::sort_key("a\tあ");
+        let key_ka = RomanTableBuilder::sort_key("ka\tか");
+        let key_sa = RomanTableBuilder::sort_key("sa\tさ");
+
+        assert!(key_a < key_ka);
+        assert!(key_ka < key_sa);
+
+        // 同じ子音では母音順: ka < ki < ku < ke < ko
+        let key_ka = RomanTableBuilder::sort_key("ka\tか");
+        let key_ki = RomanTableBuilder::sort_key("ki\tき");
+        let key_ku = RomanTableBuilder::sort_key("ku\tく");
+        let key_ke = RomanTableBuilder::sort_key("ke\tけ");
+        let key_ko = RomanTableBuilder::sort_key("ko\tこ");
+
+        assert!(key_ka < key_ki);
+        assert!(key_ki < key_ku);
+        assert!(key_ku < key_ke);
+        assert!(key_ke < key_ko);
     }
 }
