@@ -8,9 +8,9 @@ use dvorakjp_romantable::detect_duplicates::DuplicateDetector;
 
 const DEFAULT_ROMAN_TABLE_INPUT_DIR: &str = "./data/roman_table";
 const DEFAULT_ROMAN_TABLE_OUTPUT_FILE: &str = "./outputs/dvorak_jp.tsv";
-const DEFAULT_EMOJI_FILE: &str = "./data/emoji.txt";
-const DEFAULT_INPUT_FILE: &str = "./google_japanese_input/dvorakjp_prime.txt";
-const DEFAULT_OUTPUT_FILE: &str = "./google_japanese_input/dvorakjp_prime_with_emoji.txt";
+const DEFAULT_EMOJI_OUTPUT_FILE: &str = "./outputs/emoji.tsv";
+const DEFAULT_ROMAN_TABLE_INPUT_FILE: &str = "./outputs/dvorak_jp.tsv";
+const DEFAULT_ROMAN_TABLE_WITH_EMOJI_OUTPUT_FILE: &str = "./outputs/dvorak_jp_with_emoji.tsv";
 
 #[derive(Parser)]
 #[clap(name = "cargo")]
@@ -83,13 +83,14 @@ async fn main() -> Result<()> {
                     .unwrap_or_else(|| PathBuf::from(DEFAULT_ROMAN_TABLE_OUTPUT_FILE)),
             ),
             BuildCommand::RomanTableWithEmoji(args) => {
-                RomanTableWithEmojiBuilder::exec(
+                RomanTableWithEmojiBuilder::build(
                     args.input_file
-                        .unwrap_or_else(|| PathBuf::from(DEFAULT_INPUT_FILE)),
+                        .unwrap_or_else(|| PathBuf::from(DEFAULT_ROMAN_TABLE_INPUT_FILE)),
                     args.emoji_file
-                        .unwrap_or_else(|| PathBuf::from(DEFAULT_EMOJI_FILE)),
-                    args.output_file
-                        .unwrap_or_else(|| PathBuf::from(DEFAULT_OUTPUT_FILE)),
+                        .unwrap_or_else(|| PathBuf::from(DEFAULT_EMOJI_OUTPUT_FILE)),
+                    args.output_file.unwrap_or_else(|| {
+                        PathBuf::from(DEFAULT_ROMAN_TABLE_WITH_EMOJI_OUTPUT_FILE)
+                    }),
                 )
                 .await
             }

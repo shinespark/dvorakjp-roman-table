@@ -51,18 +51,22 @@ type EmojiVec = Vec<(String, char)>;
 pub struct RomanTableWithEmojiBuilder {}
 
 impl RomanTableWithEmojiBuilder {
-    pub async fn exec(
-        input_file: PathBuf,
-        emoji_file: PathBuf,
-        output_file: PathBuf,
+    pub async fn build(
+        roman_table_input_file: PathBuf,
+        emoji_output_file: PathBuf,
+        roman_table_output_file: PathBuf,
     ) -> Result<()> {
         let all_emojis = Self::get_emojis().await?;
         let emoji_vec = Self::build_emojis(all_emojis);
         let emoji_records = Self::build_emoji_records(emoji_vec);
         let trimmed_emoji_records = Self::trim_end_unique_name(emoji_records);
 
-        Self::write_emoji_file(trimmed_emoji_records, &emoji_file)?;
-        Self::concat_files(input_file, emoji_file, output_file)?;
+        Self::write_emoji_file(trimmed_emoji_records, &emoji_output_file)?;
+        Self::concat_files(
+            roman_table_input_file,
+            emoji_output_file,
+            roman_table_output_file,
+        )?;
 
         Ok(())
     }
@@ -170,9 +174,13 @@ impl RomanTableWithEmojiBuilder {
         Ok(())
     }
 
-    fn concat_files(input_file: PathBuf, emoji_file: PathBuf, output_file: PathBuf) -> Result<()> {
+    fn concat_files(
+        input_file: PathBuf,
+        emoji_output_file: PathBuf,
+        output_file: PathBuf,
+    ) -> Result<()> {
         let input_file_text = read_to_string(input_file)?;
-        let emoji_file_text = read_to_string(emoji_file)?;
+        let emoji_file_text = read_to_string(emoji_output_file)?;
         let mut buffer = File::create(output_file)?;
         buffer
             .write_all(format!("{}{}", input_file_text, emoji_file_text).as_bytes())
