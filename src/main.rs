@@ -7,7 +7,7 @@ use dvorakjp_romantable::build_roman_table_with_emoji::RomanTableWithEmojiBuilde
 use dvorakjp_romantable::detect_duplicates::DuplicateDetector;
 
 const DEFAULT_ROMAN_TABLE_INPUT_DIR: &str = "./data/roman_table";
-const DEFAULT_ROMAN_TABLE_OUTPUT_FILE: &str = "./outputs/dvorakjp.tsv";
+const DEFAULT_ROMAN_TABLE_OUTPUT_FILE: &str = "./outputs/dvorak_jp.tsv";
 const DEFAULT_EMOJI_FILE: &str = "./data/emoji.txt";
 const DEFAULT_INPUT_FILE: &str = "./google_japanese_input/dvorakjp_prime.txt";
 const DEFAULT_OUTPUT_FILE: &str = "./google_japanese_input/dvorakjp_prime_with_emoji.txt";

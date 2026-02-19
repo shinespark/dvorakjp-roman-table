@@ -32,7 +32,7 @@ pub struct RomanTableBuilder {}
 impl RomanTableBuilder {
     pub fn build(input_dir: PathBuf, output_file: PathBuf) -> Result<()> {
         let roman_table = Self::assemble(&input_dir)?;
-        fs::write(&output_file, roman_table.join("\n") + "\n")?;
+        fs::write(&output_file, roman_table.join("\n"))?;
         println!("ローマ字テーブルを生成しました: {}", output_file.display());
 
         Ok(())
