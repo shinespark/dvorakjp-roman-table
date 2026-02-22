@@ -2,11 +2,19 @@
 
 Google 日本語入力のデフォルトローマ字テーブルをベースに、[DvorakJP](http://www7.plala.or.jp/dvorakjp/) のマッピングを行ったローマ字テーブルです。
 
-DvorakJP のローマ字テーブルとしてご利用ください。
+azooKey や Google 日本語入力の DvorakJP のローマ字テーブルとしてご利用ください。
 
 ## Usage
 
-1. [dvorak_jp.tsv](outputs/dvorak_jp.tsv) をローカルにダウンロードします。
+### azooKey
+
+1. [outputs/azookey/dvorak_jp.tsv](outputs/azookey/dvorak_jp.tsv) をローカルにダウンロードします。
+1. azooKey `設定 > カスタマイズ > 入力方式` を `カスタム` に変更します。
+1. カスタム入力テーブル > 編集 > ファイルから読み込む をクリックし、`dvorak_jp.tsv` を選択し、`OK` をクリックします。
+
+### Google 日本語入力
+
+1. [outputs/google_japanese_input/dvorak_jp.tsv](outputs/google_japanese_input/dvorak_jp.tsv) をローカルにダウンロードします。
 1. Google 日本語入力の `Preferences > General > Romaji table > Customize...` ボタンをクリックします。
 1. `Edit` ボタンから `Import from file...` を クリックし、`dvorak_jp.tsv` を選択し、`OK` をクリックします。
 
@@ -15,6 +23,10 @@ DvorakJP のローマ字テーブルとしてご利用ください。
 正常に適用されなかった場合でも Google 日本語入力を再起動すると適用されます。
 
 ## Note
+### azooKey のローマ字テーブルの仕様
+
+1. 基本的には Google 日本語入力のローマ字テーブルと同様の仕様です。
+1. 後述の絵文字変換をサポートしたローマ字テーブルは、azooKey では利用できません。
 
 ### Google 日本語入力のデフォルトローマ字テーブルの仕様
 
