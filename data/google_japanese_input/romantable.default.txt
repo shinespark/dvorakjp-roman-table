@@ -34,6 +34,7 @@ ss	っ	s
 zz	っ	z
 jj	っ	j
 tt	っ	t
+tch	っ	ch
 dd	っ	d
 hh	っ	h
 ff	っ	f
@@ -227,6 +228,16 @@ gwi	ぐぃ
 gwu	ぐぅ
 gwe	ぐぇ
 gwo	ぐぉ
+swa	すぁ
+swi	すぃ
+swu	すぅ
+swe	すぇ
+swo	すぉ
+zwa	ずぁ
+zwi	ずぃ
+zwu	ずぅ
+zwe	ずぇ
+zwo	ずぉ
 za	ざ
 zi	じ
 zu	ず
