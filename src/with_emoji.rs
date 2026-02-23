@@ -1,8 +1,7 @@
 use anyhow::Result;
 use serde::Deserialize;
 use std::collections::HashMap;
-use std::fs::{File, read_to_string};
-use std::io::Write;
+use std::fs::{self, read_to_string};
 use std::path::PathBuf;
 
 const EMOJI_URL: &str =
@@ -48,25 +47,27 @@ struct Emoji {
 
 type EmojiVec = Vec<(String, char)>;
 
-pub struct RomanTableWithEmojiBuilder {}
+pub struct WithEmojiBuilder {}
 
-impl RomanTableWithEmojiBuilder {
-    pub async fn build(
-        roman_table_input_file: PathBuf,
-        emoji_output_file: PathBuf,
-        roman_table_output_file: PathBuf,
-    ) -> Result<()> {
+impl WithEmojiBuilder {
+    pub async fn build(configs: &[(PathBuf, PathBuf)]) -> Result<()> {
         let all_emojis = Self::get_emojis().await?;
         let emoji_vec = Self::build_emojis(all_emojis);
         let emoji_records = Self::build_emoji_records(emoji_vec);
         let trimmed_emoji_records = Self::trim_end_unique_name(emoji_records);
+        let emoji_text = Self::build_emoji_text(trimmed_emoji_records);
 
-        Self::write_emoji_file(trimmed_emoji_records, &emoji_output_file)?;
-        Self::concat_files(
-            roman_table_input_file,
-            emoji_output_file,
-            roman_table_output_file,
-        )?;
+        for (input_file, output_file) in configs {
+            if let Some(parent) = output_file.parent() {
+                fs::create_dir_all(parent)?;
+            }
+            let input_text = read_to_string(input_file)?;
+            fs::write(output_file, format!("{}{}", input_text, emoji_text))?;
+            println!(
+                "絵文字付きローマ字テーブルを生成しました: {}",
+                output_file.display()
+            );
+        }
 
         Ok(())
     }
@@ -163,30 +164,11 @@ impl RomanTableWithEmojiBuilder {
             .any(|x| x.starts_with(name))
     }
 
-    fn write_emoji_file(emoji_vec: EmojiVec, emoji_file: &PathBuf) -> Result<()> {
-        let mut buffer = File::create(emoji_file)?;
-        for (name, char) in emoji_vec {
-            buffer
-                .write_all(format!("{}\t{}\n", name, char).as_bytes())
-                .expect("Unable to write data.");
-        }
-
-        Ok(())
-    }
-
-    fn concat_files(
-        input_file: PathBuf,
-        emoji_output_file: PathBuf,
-        output_file: PathBuf,
-    ) -> Result<()> {
-        let input_file_text = read_to_string(input_file)?;
-        let emoji_file_text = read_to_string(emoji_output_file)?;
-        let mut buffer = File::create(output_file)?;
-        buffer
-            .write_all(format!("{}{}", input_file_text, emoji_file_text).as_bytes())
-            .expect("Unable to write data.");
-
-        Ok(())
+    fn build_emoji_text(emoji_vec: EmojiVec) -> String {
+        emoji_vec
+            .into_iter()
+            .map(|(name, char)| format!("{}\t{}\n", name, char))
+            .collect()
     }
 }
 
@@ -199,7 +181,7 @@ mod tests {
 
         #[test]
         fn any() {
-            let result = RomanTableWithEmojiBuilder::has_starts_with_same_name(
+            let result = WithEmojiBuilder::has_starts_with_same_name(
                 ":basketball",
                 &[":basketball_player:".to_string()],
             );
@@ -208,7 +190,7 @@ mod tests {
 
         #[test]
         fn not_any() {
-            let result = RomanTableWithEmojiBuilder::has_starts_with_same_name(
+            let result = WithEmojiBuilder::has_starts_with_same_name(
                 ":baseball:",
                 &[":basketball_player:".to_string()],
             );
