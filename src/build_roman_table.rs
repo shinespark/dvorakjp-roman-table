@@ -58,8 +58,12 @@ impl Romaji {
 pub struct RomanTableBuilder {}
 
 impl RomanTableBuilder {
-    pub fn build(input_dirs: &[PathBuf], output_file: PathBuf) -> Result<()> {
-        let roman_table = Self::assemble(input_dirs)?;
+    pub fn build(
+        input_dirs: &[PathBuf],
+        output_file: PathBuf,
+        input_transforms: &[(char, char)],
+    ) -> Result<()> {
+        let roman_table = Self::assemble(input_dirs, input_transforms)?;
         if let Some(parent) = output_file.parent() {
             fs::create_dir_all(parent)?;
         }
@@ -69,7 +73,7 @@ impl RomanTableBuilder {
         Ok(())
     }
 
-    fn assemble(input_dirs: &[PathBuf]) -> Result<Vec<String>> {
+    fn assemble(input_dirs: &[PathBuf], input_transforms: &[(char, char)]) -> Result<Vec<String>> {
         let tsv_files: Vec<PathBuf> = input_dirs
             .iter()
             .map(Self::read_dir)
@@ -81,8 +85,35 @@ impl RomanTableBuilder {
         let lines = Self::filter_lines(raw_lines);
         let entries = Self::to_romaji(lines);
         let sorted = Self::sort_romaji(entries);
+        let transformed = Self::apply_input_transforms(sorted, input_transforms);
 
-        Ok(sorted.into_iter().map(|r| r.to_line()).collect())
+        Ok(transformed.into_iter().map(|r| r.to_line()).collect())
+    }
+
+    fn apply_input_transforms(entries: Vec<Romaji>, transforms: &[(char, char)]) -> Vec<Romaji> {
+        if transforms.is_empty() {
+            return entries;
+        }
+        entries
+            .into_iter()
+            .map(|mut r| {
+                r.input = Self::transform_str(&r.input, transforms);
+                r.next_input = r.next_input.map(|s| Self::transform_str(&s, transforms));
+                r
+            })
+            .collect()
+    }
+
+    fn transform_str(s: &str, transforms: &[(char, char)]) -> String {
+        s.chars()
+            .map(|c| {
+                transforms
+                    .iter()
+                    .find(|(from, _)| *from == c)
+                    .map(|(_, to)| *to)
+                    .unwrap_or(c)
+            })
+            .collect()
     }
 
     fn read_dir(input_dir: &PathBuf) -> Result<Vec<PathBuf>> {
