@@ -77,33 +77,18 @@ async fn main() -> Result<()> {
                     RomanTableBuilder::build(&dirs, PathBuf::from(output_path))
                 })
             }
-            BuildCommand::WithEmoji(args) => {
-                let configs: &[(&str, &str)] = match args.target {
-                    Some(ImeTarget::AzooKey) => &[(
-                        "./outputs/azooKey/dvorak_jp.tsv",
-                        "./outputs/azooKey/dvorak_jp_with_emoji.tsv",
-                    )],
-                    Some(ImeTarget::GoogleJapaneseInput) => &[(
-                        "./outputs/google_japanese_input/dvorak_jp.tsv",
-                        "./outputs/google_japanese_input/dvorak_jp_with_emoji.tsv",
-                    )],
-                    None => &[
-                        (
-                            "./outputs/azooKey/dvorak_jp.tsv",
-                            "./outputs/azooKey/dvorak_jp_with_emoji.tsv",
-                        ),
-                        (
-                            "./outputs/google_japanese_input/dvorak_jp.tsv",
-                            "./outputs/google_japanese_input/dvorak_jp_with_emoji.tsv",
-                        ),
-                    ],
-                };
-                let configs: Vec<(PathBuf, PathBuf)> = configs
-                    .iter()
-                    .map(|(i, o)| (PathBuf::from(i), PathBuf::from(o)))
-                    .collect();
-                RomanTableWithEmojiBuilder::build(&configs).await
-            }
+            BuildCommand::WithEmoji(args) => match args.target {
+                Some(ImeTarget::AzooKey) => {
+                    anyhow::bail!("with-emoji は azooKey では未対応です")
+                }
+                Some(ImeTarget::GoogleJapaneseInput) | None => {
+                    let configs = vec![(
+                        PathBuf::from("./outputs/google_japanese_input/dvorak_jp.tsv"),
+                        PathBuf::from("./outputs/google_japanese_input/dvorak_jp_with_emoji.tsv"),
+                    )];
+                    RomanTableWithEmojiBuilder::build(&configs).await
+                }
+            },
         },
     };
     Ok(())
