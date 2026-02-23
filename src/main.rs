@@ -3,8 +3,7 @@ use clap::Parser;
 use std::path::PathBuf;
 
 use dvorakjp_romantable::build_roman_table::RomanTableBuilder;
-use dvorakjp_romantable::build_roman_table_with_emoji::RomanTableWithEmojiBuilder;
-use dvorakjp_romantable::detect_duplicates::DuplicateDetector;
+use dvorakjp_romantable::with_emoji::RomanTableWithEmojiBuilder;
 
 const DEFAULT_ROMAN_TABLE_INPUT_DIR: &str = "./data/roman_table";
 
@@ -21,7 +20,6 @@ enum ImeTarget {
 #[clap(bin_name = "cargo")]
 enum Cargo {
     Build(Build),
-    Detect(Detect),
 }
 
 #[derive(clap::Args)]
@@ -49,23 +47,6 @@ struct WithEmoji {
     target: Option<ImeTarget>,
 }
 
-#[derive(clap::Args)]
-#[clap(about = "ローマ字テーブルの検証")]
-struct Detect {
-    #[clap(subcommand)]
-    command: DetectCommand,
-}
-
-#[derive(clap::Subcommand)]
-enum DetectCommand {
-    Duplicates(DetectDuplicates),
-}
-
-#[derive(clap::Args)]
-struct DetectDuplicates {
-    #[clap(long)]
-    detect_file: PathBuf,
-}
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -124,9 +105,6 @@ async fn main() -> Result<()> {
                     .collect();
                 RomanTableWithEmojiBuilder::build(&configs).await
             }
-        },
-        Cargo::Detect(detect) => match detect.command {
-            DetectCommand::Duplicates(args) => DuplicateDetector::exec(args.detect_file),
         },
     };
     Ok(())
