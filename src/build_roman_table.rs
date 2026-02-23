@@ -72,7 +72,7 @@ impl RomanTableBuilder {
     fn assemble(input_dirs: &[PathBuf]) -> Result<Vec<String>> {
         let tsv_files: Vec<PathBuf> = input_dirs
             .iter()
-            .map(|dir| Self::read_dir(dir))
+            .map(Self::read_dir)
             .collect::<Result<Vec<_>>>()?
             .into_iter()
             .flatten()
