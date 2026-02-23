@@ -27,6 +27,16 @@ const CHAR_ORDER: &[char] = &[
     'x', // 小書き
 ];
 
+/// azooKey 用の入力シーケンス記号変換テーブル。
+/// azooKey では記号キーを全角文字で指定する必要があるため、
+/// ASCII 記号を対応する全角文字にマッピングします。
+const AZOOKEY_INPUT_TRANSFORMS: &[(char, char)] = &[
+    ('\'', '\u{2019}'), // ' → '（右シングル引用符）
+    (',', '、'),        // , → 、（読点）
+    ('.', '。'),        // . → 。（句点）
+    (';', '；'),        // ; → ；（全角セミコロン）
+];
+
 #[derive(Debug)]
 struct Romaji {
     input: String,
@@ -58,12 +68,8 @@ impl Romaji {
 pub struct RomanTableBuilder {}
 
 impl RomanTableBuilder {
-    pub fn build(
-        input_dirs: &[PathBuf],
-        output_file: PathBuf,
-        input_transforms: &[(char, char)],
-    ) -> Result<()> {
-        let roman_table = Self::assemble(input_dirs, input_transforms)?;
+    pub fn build(input_dirs: &[PathBuf], output_file: PathBuf, is_azookey: bool) -> Result<()> {
+        let roman_table = Self::assemble(input_dirs, is_azookey)?;
         if let Some(parent) = output_file.parent() {
             fs::create_dir_all(parent)?;
         }
@@ -73,7 +79,7 @@ impl RomanTableBuilder {
         Ok(())
     }
 
-    fn assemble(input_dirs: &[PathBuf], input_transforms: &[(char, char)]) -> Result<Vec<String>> {
+    fn assemble(input_dirs: &[PathBuf], is_azookey: bool) -> Result<Vec<String>> {
         let tsv_files: Vec<PathBuf> = input_dirs
             .iter()
             .map(Self::read_dir)
@@ -85,7 +91,12 @@ impl RomanTableBuilder {
         let lines = Self::filter_lines(raw_lines);
         let entries = Self::to_romaji(lines);
         let sorted = Self::sort_romaji(entries);
-        let transformed = Self::apply_input_transforms(sorted, input_transforms);
+        let transforms = if is_azookey {
+            AZOOKEY_INPUT_TRANSFORMS
+        } else {
+            &[]
+        };
+        let transformed = Self::apply_input_transforms(sorted, transforms);
 
         Ok(transformed.into_iter().map(|r| r.to_line()).collect())
     }
