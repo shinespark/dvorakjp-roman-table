@@ -3,7 +3,7 @@ use clap::Parser;
 use std::path::PathBuf;
 
 use dvorakjp_romantable::build_roman_table::RomanTableBuilder;
-use dvorakjp_romantable::with_emoji::RomanTableWithEmojiBuilder;
+use dvorakjp_romantable::with_emoji::WithEmojiBuilder;
 
 const DEFAULT_ROMAN_TABLE_INPUT_DIR: &str = "./data/roman_table";
 
@@ -112,7 +112,7 @@ async fn main() -> Result<()> {
                         PathBuf::from("./outputs/google_japanese_input/dvorak_jp.tsv"),
                         PathBuf::from("./outputs/google_japanese_input/dvorak_jp_with_emoji.tsv"),
                     )];
-                    RomanTableWithEmojiBuilder::build(&configs).await
+                    WithEmojiBuilder::build(&configs).await
                 }
             },
         },

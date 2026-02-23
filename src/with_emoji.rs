@@ -47,9 +47,9 @@ struct Emoji {
 
 type EmojiVec = Vec<(String, char)>;
 
-pub struct RomanTableWithEmojiBuilder {}
+pub struct WithEmojiBuilder {}
 
-impl RomanTableWithEmojiBuilder {
+impl WithEmojiBuilder {
     pub async fn build(configs: &[(PathBuf, PathBuf)]) -> Result<()> {
         let all_emojis = Self::get_emojis().await?;
         let emoji_vec = Self::build_emojis(all_emojis);
@@ -181,7 +181,7 @@ mod tests {
 
         #[test]
         fn any() {
-            let result = RomanTableWithEmojiBuilder::has_starts_with_same_name(
+            let result = WithEmojiBuilder::has_starts_with_same_name(
                 ":basketball",
                 &[":basketball_player:".to_string()],
             );
@@ -190,7 +190,7 @@ mod tests {
 
         #[test]
         fn not_any() {
-            let result = RomanTableWithEmojiBuilder::has_starts_with_same_name(
+            let result = WithEmojiBuilder::has_starts_with_same_name(
                 ":baseball:",
                 &[":basketball_player:".to_string()],
             );
