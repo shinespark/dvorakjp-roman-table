@@ -7,10 +7,14 @@ use dvorakjp_romantable::build_roman_table_with_emoji::RomanTableWithEmojiBuilde
 use dvorakjp_romantable::detect_duplicates::DuplicateDetector;
 
 const DEFAULT_ROMAN_TABLE_INPUT_DIR: &str = "./data/roman_table";
-const DEFAULT_ROMAN_TABLE_OUTPUT_FILE: &str = "./outputs/dvorak_jp.tsv";
-const DEFAULT_EMOJI_OUTPUT_FILE: &str = "./outputs/emoji.tsv";
-const DEFAULT_ROMAN_TABLE_INPUT_FILE: &str = "./outputs/dvorak_jp.tsv";
-const DEFAULT_ROMAN_TABLE_WITH_EMOJI_OUTPUT_FILE: &str = "./outputs/dvorak_jp_with_emoji.tsv";
+
+#[derive(clap::ValueEnum, Clone)]
+enum ImeTarget {
+    #[value(name = "azooKey")]
+    AzooKey,
+    #[value(name = "google-japanese-input")]
+    GoogleJapaneseInput,
+}
 
 #[derive(Parser)]
 #[clap(name = "cargo")]
@@ -30,28 +34,19 @@ struct Build {
 #[derive(clap::Subcommand)]
 enum BuildCommand {
     RomanTable(BuildRomanTable),
-    RomanTableWithEmoji(BuildRomanTableWithEmoji),
+    WithEmoji(WithEmoji),
 }
 
 #[derive(clap::Args)]
+#[clap(about = "ローマ字テーブルのビルド")]
 struct BuildRomanTable {
-    #[clap(long)]
-    input_dir: Option<PathBuf>,
-
-    #[clap(long)]
-    output_file: Option<PathBuf>,
+    target: Option<ImeTarget>,
 }
 
 #[derive(clap::Args)]
-struct BuildRomanTableWithEmoji {
-    #[clap(long)]
-    input_file: Option<PathBuf>,
-
-    #[clap(long)]
-    emoji_file: Option<PathBuf>,
-
-    #[clap(long)]
-    output_file: Option<PathBuf>,
+#[clap(about = "ローマ字テーブルを絵文字付きでビルド")]
+struct WithEmoji {
+    target: Option<ImeTarget>,
 }
 
 #[derive(clap::Args)]
@@ -76,23 +71,58 @@ struct DetectDuplicates {
 async fn main() -> Result<()> {
     let _ = match Cargo::parse() {
         Cargo::Build(build) => match build.command {
-            BuildCommand::RomanTable(args) => RomanTableBuilder::build(
-                args.input_dir
-                    .unwrap_or_else(|| PathBuf::from(DEFAULT_ROMAN_TABLE_INPUT_DIR)),
-                args.output_file
-                    .unwrap_or_else(|| PathBuf::from(DEFAULT_ROMAN_TABLE_OUTPUT_FILE)),
-            ),
-            BuildCommand::RomanTableWithEmoji(args) => {
-                RomanTableWithEmojiBuilder::build(
-                    args.input_file
-                        .unwrap_or_else(|| PathBuf::from(DEFAULT_ROMAN_TABLE_INPUT_FILE)),
-                    args.emoji_file
-                        .unwrap_or_else(|| PathBuf::from(DEFAULT_EMOJI_OUTPUT_FILE)),
-                    args.output_file.unwrap_or_else(|| {
-                        PathBuf::from(DEFAULT_ROMAN_TABLE_WITH_EMOJI_OUTPUT_FILE)
-                    }),
-                )
-                .await
+            BuildCommand::RomanTable(args) => {
+                let base_dir = PathBuf::from(DEFAULT_ROMAN_TABLE_INPUT_DIR);
+                let configs: &[(&str, &str)] = match args.target {
+                    Some(ImeTarget::AzooKey) => &[("azooKey", "./outputs/azooKey/dvorak_jp.tsv")],
+                    Some(ImeTarget::GoogleJapaneseInput) => &[(
+                        "google_japanese_input",
+                        "./outputs/google_japanese_input/dvorak_jp.tsv",
+                    )],
+                    None => &[
+                        ("azooKey", "./outputs/azooKey/dvorak_jp.tsv"),
+                        (
+                            "google_japanese_input",
+                            "./outputs/google_japanese_input/dvorak_jp.tsv",
+                        ),
+                    ],
+                };
+                configs.iter().try_for_each(|(subdir_name, output_path)| {
+                    let specific_dir = base_dir.join(subdir_name);
+                    let dirs = if specific_dir.exists() {
+                        vec![base_dir.clone(), specific_dir]
+                    } else {
+                        vec![base_dir.clone()]
+                    };
+                    RomanTableBuilder::build(&dirs, PathBuf::from(output_path))
+                })
+            }
+            BuildCommand::WithEmoji(args) => {
+                let configs: &[(&str, &str)] = match args.target {
+                    Some(ImeTarget::AzooKey) => &[(
+                        "./outputs/azooKey/dvorak_jp.tsv",
+                        "./outputs/azooKey/dvorak_jp_with_emoji.tsv",
+                    )],
+                    Some(ImeTarget::GoogleJapaneseInput) => &[(
+                        "./outputs/google_japanese_input/dvorak_jp.tsv",
+                        "./outputs/google_japanese_input/dvorak_jp_with_emoji.tsv",
+                    )],
+                    None => &[
+                        (
+                            "./outputs/azooKey/dvorak_jp.tsv",
+                            "./outputs/azooKey/dvorak_jp_with_emoji.tsv",
+                        ),
+                        (
+                            "./outputs/google_japanese_input/dvorak_jp.tsv",
+                            "./outputs/google_japanese_input/dvorak_jp_with_emoji.tsv",
+                        ),
+                    ],
+                };
+                let configs: Vec<(PathBuf, PathBuf)> = configs
+                    .iter()
+                    .map(|(i, o)| (PathBuf::from(i), PathBuf::from(o)))
+                    .collect();
+                RomanTableWithEmojiBuilder::build(&configs).await
             }
         },
         Cargo::Detect(detect) => match detect.command {
