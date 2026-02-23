@@ -47,7 +47,6 @@ struct WithEmoji {
     target: Option<ImeTarget>,
 }
 
-
 #[tokio::main]
 async fn main() -> Result<()> {
     let _ = match Cargo::parse() {

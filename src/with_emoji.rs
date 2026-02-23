@@ -63,7 +63,10 @@ impl RomanTableWithEmojiBuilder {
             }
             let input_text = read_to_string(input_file)?;
             fs::write(output_file, format!("{}{}", input_text, emoji_text))?;
-            println!("絵文字付きローマ字テーブルを生成しました: {}", output_file.display());
+            println!(
+                "絵文字付きローマ字テーブルを生成しました: {}",
+                output_file.display()
+            );
         }
 
         Ok(())
