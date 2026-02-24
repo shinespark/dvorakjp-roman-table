@@ -8,7 +8,7 @@ azooKey や Google 日本語入力の DvorakJP のローマ字テーブルとし
 
 ### azooKey
 
-1. [outputs/azookey/dvorak_jp.tsv](outputs/azookey/dvorak_jp.tsv) をローカルにダウンロードします。
+1. [outputs/azooKey/dvorak_jp.tsv](outputs/azooKey/dvorak_jp.tsv) をローカルにダウンロードします。
 1. azooKey `設定 > カスタマイズ > 入力方式` を `カスタム` に変更します。
 1. カスタム入力テーブル > 編集 > ファイルから読み込む をクリックし、`dvorak_jp.tsv` を選択し、`OK` をクリックします。
 
@@ -71,7 +71,7 @@ Google 日本語入力のローマ字テーブルをベースに、DvorakJP に�
    - Google 日本語入力では連続同文字打鍵での「っ」が入れられない問題は発生しないため
    - 参照: [DvorakJP - 前バージョンからの改定について](http://www7.plala.or.jp/dvorakjp/kaitei.htm)
 
-### [DvorakJP with Emoji](outputs/dvorak_jp_with_emoji.txt) の仕様
+### [DvorakJP with Emoji](outputs/google_japanese_input/dvorak_jp_with_emoji.tsv) の仕様
 
 DvorakJP に、絵文字変換を追加したローマ字テーブルです。
 全角で `：ｔａｄａ` と入力を試みると、 `🎉` に変換されます。
