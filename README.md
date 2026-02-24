@@ -1,8 +1,8 @@
 # dvorakjp-roman-table
 
-Google 日本語入力のデフォルトローマ字テーブルをベースに、[DvorakJP](http://www7.plala.or.jp/dvorakjp/) のマッピングを行ったローマ字テーブルです。
+Google 日本語入力のデフォルトローマ字テーブルをベースに、DvorakJP のマッピングを行ったローマ字テーブルです。
 
-azooKey や Google 日本語入力の DvorakJP のローマ字テーブルとしてご利用ください。
+[azooKey](https://github.com/azooKey/azooKey) や Google 日本語入力の DvorakJP のローマ字テーブルとしてご利用ください。
 
 ## Usage
 
@@ -41,7 +41,7 @@ azooKey や Google 日本語入力の DvorakJP のローマ字テーブルとし
 
 ### DvorakJP - v1.0 正式版 のローマ字テーブルの仕様
 
-[DvorakJP - 日本語入力用拡張 Dvorak](http://www7.plala.or.jp/dvorakjp/dvorakjp.htm) にて公開されていた、Dvorak 配列をベースに拡張されたローマ字テーブルです。
+DvorakJP 本家サイト - http://www7.plala.or.jp/dvorakjp/ （現在は404） にて公開されていた、Dvorak 配列をベースに拡張されたローマ字テーブルです。
 Dvorak 配列では、左手ホームポジションに母音がすべて揃っており、右手に子音が配置されているレイアウトのため、交互にタイプしやすい構成になっています。
 DvorakJP 配列では、より日本語入力でもタイプしやすいよう以下の拡張が行われています。
 
@@ -66,10 +66,10 @@ Google 日本語入力のローマ字テーブルをベースに、DvorakJP に�
    - `t*` は元々の拗音バリエーションが多いことに留意
      - `tya`: `ちゃ`, `tha`: `てゃ`, `tsa`: `つぁ`, `twa`:`とぁ`, `tna`: `ちゃ`, etc.
 1. DvorakJP の `k` によるか行の二重母音拡張と撥音拡張の有効可
-   - [DvorakJP](http://www7.plala.or.jp/dvorakjp/) ではか行の入力は `c` だけに限定されていましたが、 `k` もサポートし、コンビネーションキーを利用した二重母音拡張と撥音拡張が利用可能
+   - DvorakJP ではか行の入力は `c` だけに限定されていましたが、 `k` もサポートし、コンビネーションキーを利用した二重母音拡張と撥音拡張が利用可能
 1. DvorakJP 0.2β 時の `p` キーに二重母音拡張 `uu` を復活
    - Google 日本語入力では連続同文字打鍵での「っ」が入れられない問題は発生しないため
-   - 参照: [DvorakJP - 前バージョンからの改定について](http://www7.plala.or.jp/dvorakjp/kaitei.htm)
+   - 参照: DvorakJP - 前バージョンからの改定について - http://www7.plala.or.jp/dvorakjp/kaitei.htm （現在は404）
 
 ### [DvorakJP with Emoji](outputs/google_japanese_input/dvorak_jp_with_emoji.tsv) の仕様
 
