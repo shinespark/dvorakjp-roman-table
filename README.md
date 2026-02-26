@@ -9,7 +9,7 @@ Google 日本語入力のデフォルトローマ字テーブルをベースに�
 ### azooKey
 
 1. [outputs/azooKey/dvorak_jp.tsv](outputs/azooKey/dvorak_jp.tsv) をローカルにダウンロードします。
-1. azooKey `設定 > カスタマイズ > 入力方式` を `カスタム` に変更します。
+1. azooKeyの `設定 > カスタマイズ > 入力方式` を `カスタム` に変更します。
 1. カスタム入力テーブル > 編集 > ファイルから読み込む をクリックし、`dvorak_jp.tsv` を選択し、`OK` をクリックします。
 
 ### Google 日本語入力
