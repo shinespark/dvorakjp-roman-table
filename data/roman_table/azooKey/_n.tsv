@@ -1,4 +1,5 @@
 ny	ny
+nh	nh
 {composition-separator}
 n{composition-separator}	ん
 n{any character}	ん{any character}
