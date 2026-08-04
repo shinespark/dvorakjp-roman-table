@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    name: build & test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Rust ツールチェインをセットアップ
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: キャッシュを復元
+        uses: Swatinem/rust-cache@v2
+
+      - name: フォーマットを確認
+        run: cargo fmt --check
+
+      - name: clippy を実行
+        run: cargo clippy --all-targets -- -D warnings
+
+      - name: ビルド
+        run: cargo build --verbose
+
+      - name: テスト
+        run: cargo test --verbose
+
+      - name: ローマ字テーブルを生成して差分がないことを確認
+        run: |
+          cargo run -- build roman-table
+          git diff --exit-code outputs/
