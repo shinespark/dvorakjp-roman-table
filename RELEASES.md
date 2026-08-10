@@ -1,5 +1,10 @@
 # Releases
 
+## Version 2.1.0 (2026-08-10)
+
+- azooKey で `nh` 始まりの入力（にゃ行）に対応
+- GitHub Actions による CI ワークフローを追加
+
 ## Version 2.0.0 (2026-02-23)
 
 - azooKey に対応
